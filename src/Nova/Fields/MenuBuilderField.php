@@ -14,6 +14,7 @@ class MenuBuilderField extends Field
         $this->withMeta([
             'locales' => MenuBuilder::getLocales(),
             'maxDepth' => 10,
+            'menuCount' => MenuBuilder::getMenuClass()::count(),
         ]);
 
         parent::__construct($name, $attribute, $resolveCallback);

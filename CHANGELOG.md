@@ -2,15 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-## [6.1.0.003] - 2023-03-16
-## Changed
-- managed image in menu item
+## [6.1.1] - 07-02-2022
 
-## [6.1.0] - 2022-11-04
-## Breaking changes
-- refactored from nova-pages
-- added policies
+### Added
 
+- Added French (fr) translations (thanks to [@Jimmylet](https://github.com/Jimmylet))
+
+### Changed
+
+- Improved "copy menu from" functionality logic when dealing with just one menu and/or locale
+- Updated packages
+
+##  [6.1.0] - 2022-01-06
+
+### Added
+
+- Added "copy menu from" functionality which allows for easier menu duplication
+
+### Changed
+
+- Updated packages
 
 ## [6.0.5] - 2021-10-29
 
@@ -36,9 +47,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Fixed create/update menu item modal not triggering field updates after validation (thanks to [@HeJiaNong](https://github.com/HeJiaNong))
-- Fixed MenuItem using invalid class binding for HasMany relationship definition (thanks to [@ExileofAranei](https://github.com/ExileofAranei))
-- Fixed fields not correctly re-rendering after menu item type change (thanks to [@ExileofAranei](https://github.com/ExileofAranei))
+- Fixed create/update menu item modal not triggering field updates after validation (thanks
+  to [@HeJiaNong](https://github.com/HeJiaNong))
+- Fixed MenuItem using invalid class binding for HasMany relationship definition (thanks
+  to [@ExileofAranei](https://github.com/ExileofAranei))
+- Fixed fields not correctly re-rendering after menu item type change (thanks
+  to [@ExileofAranei](https://github.com/ExileofAranei))
 - Improved validation error displaying logic
 - Updated packages
 
@@ -57,7 +71,8 @@ All notable changes to this project will be documented in this file.
 
 ### Breaking change
 
-When migrating from 5.X to 6.X, you have to add the default menu item types to your config file if you wish to continue to use them.
+When migrating from 5.X to 6.X, you have to add the default menu item types to your config file if you wish to continue
+to use them.
 
 The config would look like this:
 
@@ -95,7 +110,8 @@ The config would look like this:
 
 ### Changed
 
-- Fixed locales callbacks, so `[SomeClass::class, 'getLocales']` should now work as expected (thanks to [@raraworks](https://github.com/raraworks))
+- Fixed locales callbacks, so `[SomeClass::class, 'getLocales']` should now work as expected (thanks
+  to [@raraworks](https://github.com/raraworks))
 - Fixed Arabic language translation files (thanks to [@omarhen](https://github.com/omarhen))
 - Fixed BaseMenuItemType type definition (thanks to [@mgralikowski](https://github.com/mgralikowski))
 - Updated packages
@@ -108,7 +124,8 @@ The config would look like this:
 
 ### Changed
 
-- Fixed config callbacks, so `Class@method` should now work as expected (thanks to [@yuriy-martini](https://github.com/yuriy-martini))
+- Fixed config callbacks, so `Class@method` should now work as expected (thanks
+  to [@yuriy-martini](https://github.com/yuriy-martini))
 - Consolidated old migrations into one main migration (thanks to [@yuriy-martini](https://github.com/yuriy-martini))
 - Updated packages
 
@@ -145,7 +162,8 @@ The config would look like this:
 
 ### Changed
 
-- Fixed case where default MenuItem model was used instead of the configured one (thanks to [@rdaitan-cp](https://github.com/rdaitan-cp))
+- Fixed case where default MenuItem model was used instead of the configured one (thanks
+  to [@rdaitan-cp](https://github.com/rdaitan-cp))
 - Fixed unique menu slug validator not working on Update
 - Fixed some more cases where wrong model was used
 - Updated packages
@@ -175,9 +193,11 @@ The config would look like this:
 
 ### Changed
 
-- Fixed migrations for SQLite (thanks to [@bambamboole](https://github.com/bambamboole) and [@harmenjanssen](https://github.com/harmenjanssen))
+- Fixed migrations for SQLite (thanks to [@bambamboole](https://github.com/bambamboole)
+  and [@harmenjanssen](https://github.com/harmenjanssen))
 - Fixed issue with Trix field not saving value
-- Fixed compatibility with PHP 8 (`getValue` and `getDisplay` functions have new signatures, but this should not cause any problems)
+- Fixed compatibility with PHP 8 (`getValue` and `getDisplay` functions have new signatures, but this should not cause
+  any problems)
 - Update packages
 
 ## [5.0.1] - 2021-01-08
@@ -314,7 +334,8 @@ Major release due to breaking changes!
 
 ### Added
 
-- Ability to add custom fields to MenuLinkable class (via `getFields(): array`) function (thanks to [@KasparRosin](https://github.com/KasparRosin))
+- Ability to add custom fields to MenuLinkable class (via `getFields(): array`) function (thanks
+  to [@KasparRosin](https://github.com/KasparRosin))
 - Ability to customize rules for menu items (via `getRules(): array`) function
 - Added new `data` column to menu items table (`php artisan migrate` required)
 - Added ability to provide custom `MenuItem` model
@@ -500,7 +521,8 @@ public static function getDisplayValue($value = null, array $parameters = null)
 
 ## [2.0.0] - 2019-11-11
 
-NB! This release contains breaking changes. See [UPGRADING.md](UPGRADING.md) for instructions on how to upgrade from 1.0 to 2.0.
+NB! This release contains breaking changes. See [UPGRADING.md](UPGRADING.md) for instructions on how to upgrade from 1.0
+to 2.0.
 
 ### Added
 
@@ -512,8 +534,8 @@ NB! This release contains breaking changes. See [UPGRADING.md](UPGRADING.md) for
 - Moved all config options from tool constructor to `config/nova-menu-builder.php`
 - Updated all packages
 - All migrations are now loaded automatically
-  - Publishing migrations is not necessary anymore
-  - Running `migrate` will delete the original migration from project source
+    - Publishing migrations is not necessary anymore
+    - Running `migrate` will delete the original migration from project source
 - Table names are now configurable through `config/nova-menu-builder.php`
 
 ## [1.4.2] - 2019-10-09
@@ -544,7 +566,8 @@ NB! This release contains breaking changes. See [UPGRADING.md](UPGRADING.md) for
 
 BREAKING!
 
-Previous `string` enforcements failed in some cases, it is safer to just remove them. New type definitions for `getDisplayValue` and `getValue`:
+Previous `string` enforcements failed in some cases, it is safer to just remove them. New type definitions
+for `getDisplayValue` and `getValue`:
 
 ```
 public static function getDisplayValue($value = null)
@@ -571,7 +594,8 @@ public static function getValue($value = null, array $parameters = null)
 
 ### Changed
 
-- Refactor `MenuItemStaticURL` and `MenuLinkable` to use `MenuItemBase` base class by [@kaareloun](https://github.com/kaareloun)
+- Refactor `MenuItemStaticURL` and `MenuLinkable` to use `MenuItemBase` base class
+  by [@kaareloun](https://github.com/kaareloun)
 - Fix select menus not showing "choose an option" by default
 - Code cleanup
 
@@ -585,7 +609,8 @@ public static function getValue($value = null, array $parameters = null)
 
 ### Changed
 
-- Add locale as parameter to `getOptions($locale)` method in `MenuLinkable` by [@slovenianGooner](https://github.com/slovenianGooner)
+- Add locale as parameter to `getOptions($locale)` method in `MenuLinkable`
+  by [@slovenianGooner](https://github.com/slovenianGooner)
 
 ## [1.1.4] - 2019-05-09
 

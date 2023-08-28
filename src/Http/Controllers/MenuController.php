@@ -3,8 +3,10 @@
 namespace Workup\MenuBuilder\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Workup\Menus\Models\Menu;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Workup\MenuBuilder\MenuBuilder;
 use Workup\MenuBuilder\Http\Traits\MenuHelpers;
 
@@ -12,10 +14,22 @@ class MenuController extends Controller
 {
     use MenuHelpers;
 
+    public function index(Request $request): Collection
+    {
+        return MenuBuilder::getMenuClass()::all()->map(function (Menu $menu) {
+            return [
+                'id' => $menu->id,
+                'title' => "{$menu->name} ({$menu->slug})",
+                'name' => $menu->name,
+                'slug' => $menu->slug,
+            ];
+        });
+    }
+
     /**
      * Return root menu items for one menu.
      **/
-    public function index(Request $request, int $menuId): JsonResponse
+    public function show(Request $request, int $menuId): JsonResponse
     {
         $menu = MenuBuilder::getMenuClass()::find($menuId);
         if (empty($menu)) {
