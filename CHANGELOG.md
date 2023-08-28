@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.3.001] - 2023-03-16
+
+## Changed
+
+- managed image in menu item
+
+## [6.1.3.000] - 2022-11-04 - Workup
+
+## Breaking changes
+
+- refactored from nova-pages
+- added policies
 
 ## [6.1.3] - 07-03-2022
 
