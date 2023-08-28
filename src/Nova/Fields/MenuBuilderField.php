@@ -15,6 +15,7 @@ class MenuBuilderField extends Field
             'locales' => MenuBuilder::getLocales(),
             'maxDepth' => 10,
             'menuCount' => MenuBuilder::getMenuClass()::count(),
+            'showDuplicate' => MenuBuilder::showDuplicate(),
         ]);
 
         parent::__construct($name, $attribute, $resolveCallback);

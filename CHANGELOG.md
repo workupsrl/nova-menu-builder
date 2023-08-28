@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [6.1.3] - 07-03-2022
+
+### Added
+
+- Added `show_duplicate` config option (thanks to [@tyler-secretninjas](https://github.com/tyler-secretninjas))
+
+### Changed
+
+- Updated packages
+
+## [6.1.2] - 11-02-2022
+
+### Changed
+
+- Allow Laravel 9
+
 ## [6.1.1] - 07-02-2022
 
 ### Added

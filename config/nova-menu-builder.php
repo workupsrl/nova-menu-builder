@@ -6,6 +6,7 @@ return [
      */
     'table_name' => 'menus',
     'items_table_name' => 'menu_items',
+    'show_duplicate' => true,
 
     /**
      * Menu item types

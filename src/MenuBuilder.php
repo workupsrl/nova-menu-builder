@@ -158,6 +158,11 @@ class MenuBuilder extends Tool
         return config('nova-menu-builder.item_route_model', \Workup\Pages\Models\Page::class);
     }
 
+    public static function showDuplicate()
+    {
+        return config("nova-menu.show_duplicate", true);
+    }
+
     protected function config()
     {
         return [
