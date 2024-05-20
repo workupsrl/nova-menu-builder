@@ -1,66 +1,34 @@
 <template>
     <div id="menu-builder-field" class="relative pb-3 w-full">
-        <menu-builder-header
-            :activeLocale="selectedLocale"
-            :locales="field.locales"
-            :menuCount="field.menuCount"
-            :resourceId="resourceId"
-            :showDuplicate="field.showDuplicate"
-            @addMenuItem="openAddModal"
-            @changeLocale="setSelectedLocale"
-            @refreshItems="refreshData"
-        />
+        <menu-builder-header :activeLocale="selectedLocale" :locales="field.locales" :menuCount="field.menuCount"
+            :resourceId="resourceId" :showDuplicate="field.showDuplicate" @addMenuItem="openAddModal"
+            @changeLocale="setSelectedLocale" @refreshItems="refreshData" />
 
         <div v-if="loadingMenuItems" class="py-6">
-            <loader class="text-60"/>
+            <loader class="text-60" />
         </div>
 
-        <no-menu-items-placeholder v-if="!loadingMenuItems && !menuItems.length" @onAddClick="openAddModal"/>
-        <menu-builder
-            v-if="!loadingMenuItems && menuItems.length"
-            :max-depth="field.maxDepth"
-            :value="menuItems"
-            :nova-path="field.novaPath"
-            @duplicateMenuItem="duplicateMenuItem"
-            @editMenu="editMenu"
-            @input="menuItems = $event"
-            @onMenuChange="updateMenu"
-            @removeMenu="removeMenu"
-            @saveMenuLocalState="saveMenuLocalState"
-        />
+        <no-menu-items-placeholder v-if="!loadingMenuItems && !menuItems.length" @onAddClick="openAddModal" />
+        <menu-builder v-if="!loadingMenuItems && menuItems.length" :max-depth="field.maxDepth" :value="menuItems"
+            :nova-path="field.novaPath" @duplicateMenuItem="duplicateMenuItem" @editMenu="editMenu"
+            @input="menuItems = $event" @onMenuChange="updateMenu" @removeMenu="removeMenu"
+            @saveMenuLocalState="saveMenuLocalState" />
 
-        <update-menu-item-modal
-            :errors="errors"
-            :isMenuItemUpdating="isMenuItemUpdating"
-            :linkType="linkType"
-            :menuItemTypes="menuItemTypes"
-            :newItem="newItem"
-            :resourceId="resourceId"
-            :resourceName="resourceName"
-            :showModal="showAddModal"
-            :update="update"
-            :nova-path="field.novaPath"
-            @closeModal="closeModal"
-            @confirmItemCreate="confirmItemCreate"
-            @onLinkEntityIdUpdate="updateEntityId"
-            @onLinkEntityItemIdUpdate="updateEntityItemId"
-            @onLinkModelUpdate="updateLinkModel"
-            @onLinkTypeUpdate="updateLinkType"
-            @updateItem="updateItem"
-        />
+        <update-menu-item-modal :errors="errors" :isMenuItemUpdating="isMenuItemUpdating" :linkType="linkType"
+            :menuItemTypes="menuItemTypes" :newItem="newItem" :resourceId="resourceId" :resourceName="resourceName"
+            :showModal="showAddModal" :update="update" :nova-path="field.novaPath" @closeModal="closeModal"
+            @confirmItemCreate="confirmItemCreate" @onLinkEntityIdUpdate="updateEntityId"
+            @onLinkEntityItemIdUpdate="updateEntityItemId" @onLinkModelUpdate="updateLinkModel"
+            @onLinkTypeUpdate="updateLinkType" @updateItem="updateItem" />
 
-        <delete-menu-item-modal
-            :itemToDelete="itemToDelete"
-            :showModal="showDeleteModal"
-            @closeModal="closeModal"
-            @confirmItemDelete="confirmItemDelete"
-        />
+        <delete-menu-item-modal :itemToDelete="itemToDelete" :showModal="showDeleteModal" @closeModal="closeModal"
+            @confirmItemDelete="confirmItemDelete" />
     </div>
 </template>
 
 <script>
 import api from '../api';
-import {FormField} from 'laravel-nova';
+import { FormField } from 'laravel-nova';
 import MenuBuilder from './MenuBuilder';
 import MenuBuilderHeader from './core/MenuBuilderHeader';
 import UpdateMenuItemModal from './modals/UpdateMenuItemModal';
@@ -196,7 +164,12 @@ export default {
         },
 
         async confirmItemCreate() {
+            if (this.isMenuItemUpdating) {
+                return;
+            }
+
             try {
+                this.isMenuItemUpdating = true;
                 this.errors = {};
                 await api.create(this.newItemData);
                 this.refreshData();
@@ -206,10 +179,16 @@ export default {
             } catch (e) {
                 console.error(e);
                 this.handleErrors(e);
+            } finally {
+                this.isMenuItemUpdating = false;
             }
         },
 
         async updateItem() {
+            if (this.isMenuItemUpdating) {
+                return;
+            }
+
             try {
                 this.isMenuItemUpdating = true;
                 this.errors = {};
@@ -304,7 +283,7 @@ export default {
             list-style-type: none;
         }
 
-        > .nestable-list {
+        >.nestable-list {
             padding: 0;
         }
 
@@ -365,7 +344,7 @@ export default {
         pointer-events: none;
     }
 
-    .nestable-drag-layer > .nestable-list {
+    .nestable-drag-layer>.nestable-list {
         position: absolute;
         top: 0;
         left: 0;
@@ -386,7 +365,7 @@ export default {
         transform-origin: center center;
     }
 
-    .hide-cascade > ol {
+    .hide-cascade>ol {
         display: none;
     }
 }

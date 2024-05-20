@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [7.2.2] - 2024-05-20
+### Fixed
+- Fix buttons and required bug on requests
+
 ## [7.2.1] - 2024-03-18
 ### Fixed
 - Fixed drag and drop not working
