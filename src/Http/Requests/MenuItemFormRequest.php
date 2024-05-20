@@ -3,6 +3,7 @@
 namespace Workup\MenuBuilder\Http\Requests;
 
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Workup\MenuBuilder\Settings;
 use Workup\MenuBuilder\MenuBuilderTool;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +28,7 @@ class MenuItemFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (! $this->has('class')) {
+        if (!$this->has('class')) {
             return [
                 'name' => 'required',
                 'class' => 'required',
@@ -83,7 +84,7 @@ class MenuItemFormRequest extends FormRequest
 
         $dataRules = [];
         foreach ($menuItemRules as $key => $rule) {
-            if ($key !== 'value' && ! Str::startsWith($key, 'data->')) {
+            if ($key !== 'value' && !Str::startsWith($key, 'data->')) {
                 $key = "data->{$key}";
             }
             $dataRules[$key] = $rule;
@@ -102,9 +103,12 @@ class MenuItemFormRequest extends FormRequest
             'class' => 'required',
             'label' => 'required|min:1',
             'locale' => 'required',
-            'path' => 'present',
-            'url' => 'present',
-//            'target' => 'required|in:_self,_blank',
+            'path' => Rule::requiredIf(preg_match("/TextType|StaticURLType/", $this->class)),
+            'url' => [
+                'present',
+                Rule::requiredIf(preg_match("/RouteType/", $this->class))
+            ],
+            //            'target' => 'required|in:_self,_blank',
         ], $dataRules);
     }
 }

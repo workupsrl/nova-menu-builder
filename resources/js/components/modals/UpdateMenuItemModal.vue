@@ -5,94 +5,63 @@
 
             <CheckboxWithLabel :checked="newItem.is_active" @input="newItem.is_active = $event.target.checked">
                 <span class="ml-1">{{
-                        newItem.is_active ? this.toggleLabels.checked : this.toggleLabels.unchecked
-                    }}</span>
+        newItem.is_active ? this.toggleLabels.checked : this.toggleLabels.unchecked
+    }}</span>
             </CheckboxWithLabel>
         </ModalHeader>
 
         <div class="pt-2 pb-6">
             <form autocomplete="off" enctype="multipart/form-data"
-                  @submit.prevent="$emit(update ? 'updateItem' : 'confirmItemCreate')">
+                @submit.prevent="$emit(update ? 'updateItem' : 'confirmItemCreate')">
                 <!-- Label -->
-                <DefaultField
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'label',
-                        name: __('novaMenuBuilder.menuItemLabel'),
-                        required: true,
-                }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'label',
+        name: __('novaMenuBuilder.menuItemLabel'),
+        required: true,
+    }" :fullWidthContent="true">
                     <template #field>
-                        <input
-                            id="label"
-                            v-model="newItem.label"
-                            :class="{ 'border-red-400': getError('label') }"
+                        <input id="label" v-model="newItem.label" :class="{ 'border-red-400': getError('label') }"
                             :placeholder="__('novaMenuBuilder.menuItemLabel')"
-                            class="w-full form-control form-input form-input-bordered"
-                            type="text"
-                            @input="setSlug"
-                        />
+                            class="w-full form-control form-input form-input-bordered" type="text" @input="setSlug" />
                     </template>
                 </DefaultField>
 
                 <!-- Slug -->
-                <DefaultField
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'slug',
-                        name: __('novaMenuBuilder.menuItemSlug'),
-                        required: true,
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'slug',
+        name: __('novaMenuBuilder.menuItemSlug'),
+        required: true,
+    }" :fullWidthContent="true">
                     <template #field>
-                        <input
-                            id="slug"
-                            v-model="newItem.slug"
-                            :class="{ 'border-red-400': getError('slug') }"
+                        <input id="slug" v-model="newItem.slug" :class="{ 'border-red-400': getError('slug') }"
                             :placeholder="__('novaMenuBuilder.menuItemSlug')"
-                            class="w-full form-control form-input form-input-bordered"
-                            type="text"
-                        />
+                            class="w-full form-control form-input form-input-bordered" type="text" />
                     </template>
                 </DefaultField>
 
                 <!-- Child Item Select -->
-                <DefaultField
-                    v-if="update"
-                    :errors="wrappedErrors"
-                    :field="{...defaultFieldProps, validationKey:'parent_id', name: __('novaMenuBuilder.childItem'), }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField v-if="update" :errors="wrappedErrors"
+                    :field="{ ...defaultFieldProps, validationKey: 'parent_id', name: __('novaMenuBuilder.childItem'), }"
+                    :fullWidthContent="true">
                     <template #field>
-                        <SelectControl
-                            v-model:selected="newItem.parent_id"
-                            :options="buildTreeOptions(newItem)"
-                            @change="selectParentId"
-                        />
+                        <SelectControl v-model:selected="newItem.parent_id" :options="buildTreeOptions(newItem)"
+                            @change="selectParentId" />
                     </template>
                 </DefaultField>
 
                 <!-- Link Type -->
-                <DefaultField
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'class',
-                        name: __('novaMenuBuilder.menuItemType'),
-                        required: true,
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'class',
+        name: __('novaMenuBuilder.menuItemType'),
+        required: true,
+    }" :fullWidthContent="true">
                     <template #field>
-                        <SelectControl
-                            v-model:selected="linkType.class"
+                        <SelectControl v-model:selected="linkType.class"
                             :options="menuItemTypes.map(val => ({ value: val.class, label: __(val.name) }))"
-                            @change="e => $emit('onLinkTypeUpdate', e)"
-                        >
+                            @change="e => $emit('onLinkTypeUpdate', e)">
                             <option disabled="disabled" selected="selected" value="">
                                 {{ __('novaMenuBuilder.chooseMenuItemType') }}
                             </option>
@@ -101,82 +70,45 @@
                 </DefaultField>
 
                 <!-- Path -->
-                <DefaultField
-                    v-if="showSlug()"
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'path',
-                        name: __('novaMenuBuilder.menuItemPath'),
-                        required: true,
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField v-if="showSlug()" :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'path',
+        name: __('novaMenuBuilder.menuItemPath'),
+        required: true,
+    }" :fullWidthContent="true">
                     <template #field>
-                        <input
-                            id="path"
-                            v-model="newItem.path"
-                            :class="{ 'border-red-400': getError('path') }"
+                        <input id="path" v-model="newItem.path" :class="{ 'border-red-400': getError('path') }"
                             :placeholder="__('novaMenuBuilder.menuItemPath')"
-                            class="w-full form-control form-input form-input-bordered"
-                            type="text"
-                        />
+                            class="w-full form-control form-input form-input-bordered" type="text" />
                     </template>
                 </DefaultField>
 
                 <!-- Static URL -->
-                <DefaultField
-                    v-if="linkType.type === 'static-url'"
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'url',
-                        name:__('novaMenuBuilder.menuItemUrlFieldName'),
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField v-if="linkType.type === 'static-url'" :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'url',
+        name: __('novaMenuBuilder.menuItemUrlFieldName'),
+    }" :fullWidthContent="true">
                     <template #field>
-                        <input
-                            id="url"
-                            v-model="newItem.url"
-                            :class="{ 'border-red-400': getError('url') }"
+                        <input id="url" v-model="newItem.url" :class="{ 'border-red-400': getError('url') }"
                             :placeholder="__('novaMenuBuilder.menuItemUrlFieldName')"
-                            class="w-full form-control form-input form-input-bordered"
-                            type="text"
-                        />
+                            class="w-full form-control form-input form-input-bordered" type="text" />
                     </template>
                 </DefaultField>
 
                 <!-- Route Select -->
-                <DefaultField
-                    v-if="linkType.type === 'route-select'"
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'url',
-                        name:  __('novaMenuBuilder.menuItemRoute'),
-                    }"
-                    :fullWidthContent="true"
-                    class="option-select-field menu-builder-multiselect-wrapper"
-                >
+                <DefaultField v-if="linkType.type === 'route-select'" :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'url',
+        name: __('novaMenuBuilder.menuItemRoute'),
+        required: true,
+    }" :fullWidthContent="true" class="option-select-field menu-builder-multiselect-wrapper">
                     <template #field>
-                        <multiselect
-                            ref="route-multiselect"
-                            :options="options"
-                            :placeholder="__('novaMenuBuilder.chooseOption')"
-                            :value="selectedOption"
-                            deselectGroupLabel=""
-                            deselectLabel=""
-                            label="label"
-                            selectGroupLabel=""
-                            selectLabel=""
-                            selectedLabel=""
-                            track-by="id"
-                            @close="handleClose"
-                            @input="handleChange"
-                            @open="handleOpen"
-                            @remove="handleRemove"
-                        >
+                        <multiselect ref="route-multiselect" :options="options"
+                            :placeholder="__('novaMenuBuilder.chooseOption')" :value="selectedOption"
+                            deselectGroupLabel="" deselectLabel="" label="label" selectGroupLabel="" selectLabel=""
+                            selectedLabel="" track-by="id" @close="handleClose" @input="handleChange" @open="handleOpen"
+                            @remove="handleRemove">
                             <template #singleLabel>
                                 <span>{{ selectedOption ? selectedOption.label : '' }}</span>
                             </template>
@@ -194,28 +126,14 @@
                 </DefaultField>
 
                 <!-- Entity Select -->
-                <DefaultField
-                    v-if="linkType.type === 'entity-select'"
-                    :field="{
-                        ...defaultFieldProps,
-                        name: __('novaMenuBuilder.menuItemEntity'),
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField v-if="linkType.type === 'entity-select'" :field="{
+        ...defaultFieldProps,
+        name: __('novaMenuBuilder.menuItemEntity'),
+    }" :fullWidthContent="true">
                     <template #field>
-                        <multiselect
-                            :options="entities"
-                            :placeholder="__('novaMenuBuilder.chooseOption')"
-                            :value="selectedEntity"
-                            deselectGroupLabel=""
-                            deselectLabel=""
-                            label="label"
-                            selectGroupLabel=""
-                            selectLabel=""
-                            selectedLabel=""
-                            track-by="id"
-                            @input="selectEntity"
-                        />
+                        <multiselect :options="entities" :placeholder="__('novaMenuBuilder.chooseOption')"
+                            :value="selectedEntity" deselectGroupLabel="" deselectLabel="" label="label"
+                            selectGroupLabel="" selectLabel="" selectedLabel="" track-by="id" @input="selectEntity" />
 
                         <help-text v-if="getError('value')" class="error-text mt-2 text-danger">
                             {{ getError('value') }}
@@ -223,29 +141,17 @@
                     </template>
                 </DefaultField>
 
-                <DefaultField
-                    v-if="linkType.type === 'entity-select'"
-                    :field="{
-                        ...defaultFieldProps,
-                        name: __('novaMenuBuilder.menuItemEntityValue')
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField v-if="linkType.type === 'entity-select'" :field="{
+        ...defaultFieldProps,
+        name: __('novaMenuBuilder.menuItemEntityValue')
+    }" :fullWidthContent="true">
                     <template #field>
-                        <multiselect
-                            :options="entityOptions"
-                            :placeholder="__('novaMenuBuilder.chooseEntityOption')"
+                        <multiselect :options="entityOptions" :placeholder="__('novaMenuBuilder.chooseEntityOption')"
                             :value="entityOptions.find(entityOption => entityOption.id === this.newItem.entity_item_id)"
-                            deselectGroupLabel=""
-                            deselectLabel=""
-                            label="label"
-                            selectGroupLabel=""
-                            selectLabel=""
-                            selectedLabel=""
-                            track-by="id"
+                            deselectGroupLabel="" deselectLabel="" label="label" selectGroupLabel="" selectLabel=""
+                            selectedLabel="" track-by="id"
                             @input="value => this.$emit('onLinkEntityItemIdUpdate', value.id)"
-                            @search-change="asyncFindEntityOption"
-                        />
+                            @search-change="asyncFindEntityOption" />
 
                         <help-text v-if="getError('value')" class="error-text mt-2 text-danger">
                             {{ getError('value') }}
@@ -254,31 +160,22 @@
                 </DefaultField>
 
                 <!-- Media -->
-                <DefaultField
-                    :errors="wrappedErrors"
-                    :field="{
-                        ...defaultFieldProps,
-                        validationKey: 'media',
-                        name: __('novaMenuBuilder.image'),
-                    }"
-                    :fullWidthContent="true"
-                >
+                <DefaultField :errors="wrappedErrors" :field="{
+        ...defaultFieldProps,
+        validationKey: 'media',
+        name: __('novaMenuBuilder.image'),
+    }" :fullWidthContent="true">
                     <template #field>
                         <span class="form-file">
-                            <input
-                                id="media"
-                                :class="{ 'border-red-400': getError('media') }"
-                                class="form-file-input"
-                                type="file"
-                                @change="selectMedia"
-                            />
+                            <input id="media" :class="{ 'border-red-400': getError('media') }" class="form-file-input"
+                                type="file" @change="selectMedia" />
                             <label
                                 class="shadow relative bg-primary-500 hover:bg-primary-400 text-white dark:text-gray-900 cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring ring-primary-200 dark:ring-gray-600 inline-flex items-center justify-center h-9 px-3 bg-primary-500 hover:bg-primary-400"
                                 for="media">
                                 <span>{{ __('novaMenuBuilder.addNewMedia') }}</span>
                             </label>
                         </span>
-                        <img v-if="previewUrl || newItem.media_url" :src="previewUrl || newItem.media_url" alt=""/>
+                        <img v-if="previewUrl || newItem.media_url" :src="previewUrl || newItem.media_url" alt="" />
                         <button v-if="previewUrl || newItem.media_url" type="button" @click="removeMedia">
                             {{ __('novaMenuBuilder.removeMedia') }}
                         </button>
@@ -286,49 +183,30 @@
                 </DefaultField>
 
                 <template v-if="fields && fields.length">
-                    <component
-                        :is="`form-${field.component}`"
-                        v-for="(field, i) in fields"
-                        :key="`${linkType.class}_${i}`"
-                        :errors="wrappedErrors"
-                        :field="field"
-                        :fullWidthContent="true"
-                        :resource-id="resourceId"
-                        :resource-name="resourceName"
-                        :show-errors="true"
-                        class="menu-item-component"
-                    />
+                    <component :is="`form-${field.component}`" v-for="(field, i) in fields"
+                        :key="`${linkType.class}_${i}`" :errors="wrappedErrors" :field="field" :fullWidthContent="true"
+                        :resource-id="resourceId" :resource-name="resourceName" :show-errors="true"
+                        class="menu-item-component" />
                 </template>
             </form>
         </div>
 
         <ModalFooter class="flex justify-between">
             <div>
-                <a
-                    :href="getEditUrl(newItem)"
-                    :title="__('novaMenuBuilder.advancedEdit')"
-                    class="cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring ring-primary-200 dark:ring-gray-600 inline-flex items-center justify-center h-9 px-3 appearance-none bg-transparent text-gray-400 hover:text-gray-300 active:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:active:text-gray-600 dark:hover:bg-gray-800"
-                >
+                <a :href="getEditUrl(newItem)" :title="__('novaMenuBuilder.advancedEdit')"
+                    class="cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring ring-primary-200 dark:ring-gray-600 inline-flex items-center justify-center h-9 px-3 appearance-none bg-transparent text-gray-400 hover:text-gray-300 active:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:active:text-gray-600 dark:hover:bg-gray-800">
                     <span v-text="__('novaMenuBuilder.advancedEdit')"></span>
                 </a>
             </div>
             <div class="ml-auto">
 
-                <CancelButton
-                    component="button"
-                    dusk="cancel-action-button"
-                    type="button"
-                    @click.prevent="$emit('closeModal')"
-                />
+                <CancelButton component="button" dusk="cancel-action-button" type="button"
+                    @click.prevent="$emit('closeModal')" />
 
-                <LoadingButton
-                    ref="runButton"
-                    :disabled="isMenuItemUpdating"
-                    :loading="isMenuItemUpdating"
+                <LoadingButton ref="runButton" :disabled="isMenuItemUpdating" :loading="isMenuItemUpdating"
                     class="ml-3 border text-left appearance-none cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring ring-primary-200 dark:ring-gray-600 relative disabled:cursor-not-allowed inline-flex items-center justify-center shadow h-9 px-3 bg-primary-500 border-primary-500 hover:[&amp;:not(:disabled)]:bg-primary-400 hover:[&amp;:not(:disabled)]:border-primary-400 text-white dark:text-gray-900"
-                    type="submit"
-                    @click="storeWithData(update ? 'updateItem' : 'confirmItemCreate', $event)"
-                >
+                    :class="{ 'cursor-pointer': !isMenuItemUpdating, 'cursor-not-allowed': isMenuItemUpdating }"
+                    type="submit" @click="storeWithData(update ? 'updateItem' : 'confirmItemCreate', $event)">
                     {{ __(update ? 'novaMenuBuilder.updatebuttonTitle' : 'novaMenuBuilder.createButtonTitle') }}
                 </LoadingButton>
             </div>
@@ -337,8 +215,8 @@
 </template>
 
 <script>
-import {HandlesValidationErrors} from 'laravel-nova';
-import {Errors} from 'form-backend-validation';
+import { HandlesValidationErrors } from 'laravel-nova';
+import { Errors } from 'form-backend-validation';
 import Multiselect from 'vue-multiselect/src/Multiselect';
 
 export default {
@@ -394,13 +272,13 @@ export default {
             checked: this.__('novaMenuBuilder.menuItemActive'),
             unchecked: this.__('novaMenuBuilder.menuItemDisabled'),
         };
-        this.switchColor = {checked: '#21b978', unchecked: '#dae1e7', disabled: '#eef1f4'};
+        this.switchColor = { checked: '#21b978', unchecked: '#dae1e7', disabled: '#eef1f4' };
     },
 
     computed: {
         options() {
             const options = [...this.linkType.options];
-            options.unshift({id: '', label: this.__('novaMenuBuilder.chooseOption')});
+            options.unshift({ id: '', label: this.__('novaMenuBuilder.chooseOption') });
             return options;
         },
 
@@ -422,7 +300,7 @@ export default {
                 }
             }
 
-            entities.unshift({id: '', label: this.__('novaMenuBuilder.chooseOption')});
+            entities.unshift({ id: '', label: this.__('novaMenuBuilder.chooseOption') });
 
             return entities;
         },
@@ -539,7 +417,7 @@ export default {
             const handlePositioning = () => {
                 if (onOpen) ms.$refs.list.scrollTop = 0;
 
-                const {y, height} = el.getBoundingClientRect();
+                const { y, height } = el.getBoundingClientRect();
 
                 const top = y + height;
 
@@ -568,13 +446,13 @@ export default {
         buildTreeOptions(item, level = 0) {
             let options = [];
             if (level === 0 && item.parent) {
-                options.push({value: null, label: item.parent.name});
+                options.push({ value: null, label: item.parent.name });
                 level = 1;
             }
             if (item.child_items) {
                 item.child_items.forEach(childItem => {
                     if (!this.isDuplicate(childItem, options)) {
-                        options.push({value: childItem.id, label: '-'.repeat(level * 2) + ' ' + childItem.label});
+                        options.push({ value: childItem.id, label: '-'.repeat(level * 2) + ' ' + childItem.label });
                         options = options.concat(this.buildTreeOptions(childItem, level + 1));
                     }
                 });
@@ -628,7 +506,7 @@ export default {
                         label: item.title,
                     };
                 });
-                this.entityOptions.unshift({id: '0', label: this.__('novaMenuBuilder.indexOption')});
+                this.entityOptions.unshift({ id: '0', label: this.__('novaMenuBuilder.indexOption') });
             })
         },
 
@@ -748,7 +626,8 @@ $red500: #ef4444;
         }
     }
 
-    .multiselect > .multiselect__clear {
+    .multiselect>.multiselect__clear {
+
         &::before,
         &::after {
             width: 2px;
@@ -756,6 +635,7 @@ $red500: #ef4444;
         }
 
         &:hover {
+
             &::before,
             &::after {
                 background: rgba(var(--colors-red-400));
@@ -814,7 +694,7 @@ $red500: #ef4444;
             background-color: $slate900;
         }
 
-        li > span.multiselect__option {
+        li>span.multiselect__option {
             background-color: #fff;
             color: $slate400;
 
